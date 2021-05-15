@@ -1,6 +1,22 @@
 .dashboard-container{
     background: #6C63FF;
-    height: 100vh;
-    max-height: 100vh;
+    min-height: 100vh;
     width: 100%;
+}
+
+.no-data-container{
+    height: 240px;
+}
+
+.no-data-container > img {
+    height: 100%;
+}
+
+@media (max-width: 992px) {
+
+    .no-data-container {
+        height: 300px;
+        width: 90%;
+        margin: 0 auto;
+    }
 }

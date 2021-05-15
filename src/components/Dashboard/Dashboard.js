@@ -1,9 +1,13 @@
 import "../../css/Dasboard.css";
 import getAxiosHelper from "../../helpers/getAxiosHelper";
 import postAxiosHelper from "../../helpers/postAxiosHelper";
-// import Task from "../Task/Task";
-import React, { Component, useEffect } from "react";
+import deleteAxiosHelper from "../../helpers/deleteAxiosHelper";
+import putAxiosHelper from "../../helpers/putAxiosHelper";
+import React, { Component } from "react";
 import Task from "../Task/Task";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import NoDataSvg from "../../assets/no-task.svg";
 
 class Dashboard extends Component {
   constructor() {
@@ -16,6 +20,8 @@ class Dashboard extends Component {
       description: "",
       loader: false,
       token: null,
+      edit: false,
+      task: null,
     };
   }
 
@@ -45,9 +51,18 @@ class Dashboard extends Component {
     });
   };
 
-  createTask = async (e) => {
+  checkStatus = (e) => {
     e.preventDefault();
 
+    if (!this.state["edit"]) {
+      this.createTask();
+      return;
+    }
+
+    this.updateTask();
+  };
+
+  createTask = async () => {
     this.setState({
       loader: true,
     });
@@ -61,7 +76,21 @@ class Dashboard extends Component {
         }
       );
 
-      let tasks_ = [data.task, ...this.state["tasks"]];
+      const tokenString = sessionStorage.getItem("token");
+      const userToken = JSON.parse(tokenString);
+
+      let createdTask = {
+        id: data.task.id,
+        title: data.task.title,
+        description: data.task.description,
+        status: 0,
+        user: {
+          id: userToken?.user?.id,
+          name: userToken?.user?.name,
+        },
+      };
+
+      let tasks_ = [createdTask, ...this.state["tasks"]];
 
       this.setState({
         tasks: tasks_,
@@ -81,13 +110,96 @@ class Dashboard extends Component {
     }
   };
 
+  deleteTask = async (title, id) => {
+    if (window.confirm("Are you sure to delete " + title + " task")) {
+      await deleteAxiosHelper(
+        process.env.REACT_APP_API_URL + "/api/tasks/" + id
+      )
+        .then((res) => {
+          let tasks_ = this.state["tasks"].filter((task) => task.id !== id);
+
+          this.setState({
+            tasks: tasks_,
+          });
+
+          toast(res.data.message, {
+            type: "error",
+            delay: "2000",
+            position: "top-center",
+          });
+        })
+        .catch((e) => {
+          console.log(e);
+        });
+    }
+  };
+
+  editTask = (title, description, id) => {
+    this.setState({
+      title: title,
+      description: description,
+      edit: true,
+      task: id,
+    });
+  };
+
+  updateTask = async () => {
+    this.setState({
+      loader: true,
+    });
+
+    await putAxiosHelper(
+      process.env.REACT_APP_API_URL + "/api/tasks/" + this.state["task"],
+      {
+        title: this.state["title"],
+        description: this.state["description"],
+      }
+    )
+      .then((res) => {
+        toast(res.data.message, {
+          type: "success",
+          delay: "2000",
+          position: "top-center",
+        });
+
+        let tasks_ = this.state["tasks"];
+
+        tasks_.map((task) => {
+          if (task.id === this.state["task"]) {
+            task.title = this.state["title"];
+            task.description = this.state["description"];
+          }
+          return task;
+        });
+
+        this.setState({
+          tasks: tasks_,
+          title: "",
+          description: "",
+          loader: false,
+          task: null,
+          edit: false,
+        });
+      })
+      .catch((error) => {
+        if (error.response && error.response.data) {
+          this.setState({
+            error: error.response.data,
+          });
+        }
+        this.setState({
+          loader: false,
+        });
+      });
+  };
+
   render() {
     return (
       <div className="dashboard-container">
         <div className="jumbotron">
           <div className="container">
-            <h2>Add a new task</h2>
-            <form onSubmit={this.createTask}>
+            <h2>{this.state["edit"] ? "Edit task" : "Add a new task"}</h2>
+            <form onSubmit={this.checkStatus}>
               <div className="form-group">
                 <label htmlFor="title">
                   Title<sup className="text-danger">*</sup>
@@ -144,7 +256,7 @@ class Dashboard extends Component {
                   disabled={this.state["loader"]}
                   className="btn btn-md login-btn text-white"
                 >
-                  Submit&nbsp;
+                  {this.state["edit"] ? "Save" : "Create"}&nbsp;
                   {this.state["loader"] ? (
                     <div
                       className="spinner-border text-white spinner-border-sm"
@@ -158,11 +270,28 @@ class Dashboard extends Component {
             </form>
           </div>
         </div>
-        <div className="container">
-          {this.state["tasks"].map((task) => {
-            return <Task task={task}></Task>;
-          })}
-        </div>
+        <ToastContainer />
+        {this.state["tasks"].length === 0 ? (
+          <div className="text-center h3 text-white py-5">
+            <div className="no-data-container">
+              <img src={NoDataSvg} className="img-fluid" alt="No data" />
+            </div>
+            <h3 className="pt-2">No tasks</h3>
+          </div>
+        ) : (
+          <div className="container d-flex justify-content-center align-items-center flex-column">
+            {this.state["tasks"].map((task) => {
+              return (
+                <Task
+                  task={task}
+                  key={task.id}
+                  onDeleteTask={this.deleteTask}
+                  onEditTask={this.editTask}
+                ></Task>
+              );
+            })}
+          </div>
+        )}
       </div>
     );
   }

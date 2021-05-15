@@ -3,7 +3,7 @@ const db = require("../../db");
 exports.index = async (req, res) => {
   try {
     let filters = {
-      attributes: ["id", "title", "description"],
+      attributes: ["id", "title", "description", "status"],
       order: [["createdAt", "DESC"]],
       include: {
         model: db.User,
@@ -76,6 +76,15 @@ exports.update = async (req, res) => {
 
 exports.destroy = async (req, res) => {
   try {
+    await db.Task.update(
+      {
+        status: -1,
+      },
+      {
+        where: { id: req.params.task },
+      }
+    );
+
     const task = await db.Task.destroy({
       where: { id: req.params.task },
     });

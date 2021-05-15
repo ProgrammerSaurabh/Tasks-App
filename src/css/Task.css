@@ -1,0 +1,36 @@
+.task{
+    width: 100%;
+    border-radius: 5px;
+    display: flex;
+    justify-content: space-between;
+    align-items:center;
+    flex-direction: row;
+    background-color: white;
+    margin-bottom: 10px;
+    padding: 10px 15px;
+    box-shadow: 2px 2px rgba(0,0,0,0.8);
+    user-select: none;
+}
+
+.task:hover{
+    box-shadow: 2px 4px rgba(0, 0, 0, 0.8);
+}
+
+.task:last-child{
+    margin-bottom: 30px;
+}
+
+.task-detail {
+    max-width: 90%;
+}
+
+p {
+    margin-bottom: 0rem !important;
+}
+
+.task-detail > h4 {
+    font-size: 18px;
+    white-space: wrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
