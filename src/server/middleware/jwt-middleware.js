@@ -3,17 +3,16 @@ require("dotenv").config();
 
 module.exports = (req, res, next) => {
   try {
-    const token = req.headers.authorization.split(" ")[1];
-    const user = jwt.verify(token, process.env.JWT_SECRET);
-
-    if (!user) {
-      res.status(401).json({
-        message: "Unauthorized!",
-      });
+    if (req.headers && req.headers.authorization) {
+      const token = req.headers.authorization.split(" ")[1];
+      const user = jwt.verify(token, process.env.JWT_SECRET);
+      req.user = user;
+      return next();
     }
 
-    req.user = user;
-    next();
+    res.status(401).json({
+      message: "Unauthorized!",
+    });
   } catch (error) {
     res.status(401).json({
       message: "Unauthorized!",
