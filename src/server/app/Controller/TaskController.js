@@ -7,7 +7,7 @@ exports.index = async (req, res) => {
       order: [["createdAt", "DESC"]],
       include: {
         model: db.User,
-        attributes: ["id", "username"],
+        attributes: ["id", "name"],
       },
     };
     const tasks = await db.Task.findAll(filters);

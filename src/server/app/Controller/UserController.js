@@ -13,6 +13,9 @@ exports.register = async (req, res) => {
   if (req.body.username.trim() == "") {
     error["username"] = "Username is required";
   }
+  if (req.body.name.trim() == "") {
+    error["name"] = "Name is required";
+  }
   if (req.body.password.trim() == "") {
     error["password"] = "Password is required";
   }
@@ -41,21 +44,13 @@ exports.register = async (req, res) => {
     let hash = await bcrypt.hash(req.body.password.trim(), saltRounds);
 
     const user = await db.User.create({
+      name: req.body.name.trim(),
       username: req.body.username.trim(),
       password: hash,
     });
 
     return res.send({
-      token: generateAccessToken(
-        JSON.stringify({
-          id: user.id,
-          username: user.username,
-        })
-      ),
-      user: {
-        id: user.id,
-        username: user.username,
-      },
+      message: "Registered successfully",
     });
   } catch (error) {
     return res.status(500).send(error.message);
@@ -99,16 +94,18 @@ exports.login = async (req, res) => {
             password: "Invalid password",
           });
         }
-        return res.status(201).json({
+        return res.status(200).json({
           token: generateAccessToken(
             JSON.stringify({
               id: user.id,
               username: user.username,
+              name: user.name,
             })
           ),
           user: {
             id: user.id,
             username: user.username,
+            name: user.name,
           },
         });
       });
