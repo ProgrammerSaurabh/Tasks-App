@@ -49,7 +49,7 @@ export default function Register(props) {
         confirm_password: confirm_password,
       });
       setLoader(false);
-      props.onRegistered();
+      props.onRegistered(true);
     } catch (error) {
       if (error.response && error.response.data) {
         setError(error.response.data);

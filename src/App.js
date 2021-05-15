@@ -6,20 +6,27 @@ import Register from "../src/components/Register/Register";
 import React, { useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import useToken from "./helpers/useToken";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function App() {
   const { token, saveToken } = useToken();
   const [register, setRegister] = useState(false);
 
-  let toggleRegister = () => {
+  let toggleRegister = (show = false) => {
+    if (show) {
+      toast("Registered successfully", {
+        type: "success",
+        delay: "2000",
+        position: "top-center",
+      });
+    }
     setRegister(!register);
   };
 
   let saveToken_ = (data) => {
     saveToken(data);
   };
-
-  console.log(token);
 
   if (!token) {
     if (register) {
@@ -30,7 +37,12 @@ function App() {
         />
       );
     }
-    return <Login onLogin={saveToken_} onRegisterClick={toggleRegister} />;
+    return (
+      <div>
+        <Login onLogin={saveToken_} onRegisterClick={toggleRegister} />
+        <ToastContainer />
+      </div>
+    );
   }
 
   return (

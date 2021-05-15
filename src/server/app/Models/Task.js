@@ -11,6 +11,10 @@ module.exports = (sequelize, Sequelize) => {
     description: {
       type: Sequelize.TEXT,
     },
+    status: {
+      type: Sequelize.INTEGER,
+      defaultValue: 0,
+    },
   });
 
   return Task;
