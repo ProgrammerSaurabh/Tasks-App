@@ -47,9 +47,11 @@ Copy `.env` example.
 
 Generate jwt secret key and copy the generated code to `JWT_SECRET` in `.env` file.
 
-### `node -e "console.log(require('crypto').randomBytes(256).toString('base64'));"`
+#### `node -e "console.log(require('crypto').randomBytes(256).toString('base64'));"`
 
 Add credentials for database
+
+Serve the project
 
 ### `npm run serve`
 
