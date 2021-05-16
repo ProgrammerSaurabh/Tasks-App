@@ -8,6 +8,8 @@ import Task from "../Task/Task";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import NoDataSvg from "../../assets/no-task.svg";
+import DateTimePicker from "react-datetime-picker";
+import moment from "moment";
 
 class Dashboard extends Component {
   constructor() {
@@ -18,6 +20,7 @@ class Dashboard extends Component {
       tasks: [],
       title: "",
       description: "",
+      due_date: new Date(),
       loader: false,
       token: null,
       edit: false,
@@ -51,6 +54,12 @@ class Dashboard extends Component {
     });
   };
 
+  dueDateChange = (date) => {
+    this.setState({
+      due_date: date,
+    });
+  };
+
   checkStatus = (e) => {
     e.preventDefault();
 
@@ -73,6 +82,7 @@ class Dashboard extends Component {
         {
           title: this.state["title"],
           description: this.state["description"],
+          due_date: moment(this.state["due_date"]).format("YYYY-MM-DD HH:mm"),
         }
       );
 
@@ -84,6 +94,7 @@ class Dashboard extends Component {
         title: data.task.title,
         description: data.task.description,
         status: 0,
+        due_date: data.due_date,
         user: {
           id: userToken?.user?.id,
           name: userToken?.user?.name,
@@ -238,7 +249,7 @@ class Dashboard extends Component {
                   placeholder="Enter description"
                   value={this.state["description"]}
                   onChange={this.descriptionChange}
-                  rows="5"
+                  rows="2"
                 ></textarea>
                 <small
                   className={
@@ -248,6 +259,32 @@ class Dashboard extends Component {
                   }
                 >
                   {this.state["error"] && this.state["error"]["description"]}
+                </small>
+              </div>
+              <div>
+                <label htmlFor="due-date">Due date</label>
+                <div
+                  className={
+                    this.state["error"] && this.state["error"]["due_date"]
+                      ? "task-datepicker task-error"
+                      : "task-datepicker"
+                  }
+                >
+                  <DateTimePicker
+                    id="due-date"
+                    onChange={this.dueDateChange}
+                    value={this.state["due_date"]}
+                    disabled={this.state["edit"]}
+                  />
+                </div>
+                <small
+                  className={
+                    this.state["error"]
+                      ? "text-sm text-danger"
+                      : "d-none text-sm text-danger"
+                  }
+                >
+                  {this.state["error"] && this.state["error"]["due_date"]}
                 </small>
               </div>
               <div className="text-left mt-4">

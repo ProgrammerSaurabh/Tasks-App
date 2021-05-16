@@ -8,7 +8,7 @@ function Task(props) {
       <div className="task-detail">
         <h4>{props.task.title}</h4>
         <p className="task-user">
-          <small className="text-muted">Created by</small>
+          <small className="text-muted">Assigned to</small>
           &nbsp;{props.task.user.name}
         </p>
       </div>
