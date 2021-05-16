@@ -34,8 +34,15 @@ class Dashboard extends Component {
         process.env.REACT_APP_API_URL + "/api/tasks"
       );
 
+      let tasks_ = data.tasks;
+      tasks_.map((task) => {
+        task["due_date"] = new Date(task["due_date"]);
+
+        return task;
+      });
+
       this.setState({
-        tasks: data.tasks,
+        tasks: tasks_,
       });
     } catch (error) {
       console.log(error);
@@ -94,7 +101,7 @@ class Dashboard extends Component {
         title: data.task.title,
         description: data.task.description,
         status: 0,
-        due_date: data.due_date,
+        due_date: new Date(data.task.due_date),
         user: {
           id: userToken?.user?.id,
           name: userToken?.user?.name,
@@ -107,6 +114,7 @@ class Dashboard extends Component {
         tasks: tasks_,
         title: "",
         description: "",
+        due_date: new Date(),
         loader: false,
       });
     } catch (error) {
@@ -122,7 +130,7 @@ class Dashboard extends Component {
   };
 
   deleteTask = async (title, id) => {
-    if (window.confirm("Are you sure to delete " + title + " task")) {
+    if (window.confirm("Are you sure you want to delete " + title + " task")) {
       await deleteAxiosHelper(
         process.env.REACT_APP_API_URL + "/api/tasks/" + id
       )
@@ -153,6 +161,33 @@ class Dashboard extends Component {
       edit: true,
       task: id,
     });
+  };
+
+  completeTask = async (id) => {
+    await putAxiosHelper(
+      process.env.REACT_APP_API_URL + "/api/tasks/" + id + "/complete"
+    )
+      .then((res) => {
+        let tasks_ = this.state["tasks"].map((task) => {
+          if (task.id === id) {
+            task.status = 1;
+          }
+          return task;
+        });
+
+        this.setState({
+          tasks: tasks_,
+        });
+
+        toast(res.data.message, {
+          type: "success",
+          delay: "2000",
+          position: "top-center",
+        });
+      })
+      .catch((e) => {
+        console.log(e);
+      });
   };
 
   updateTask = async () => {
@@ -326,6 +361,7 @@ class Dashboard extends Component {
                   key={task.id}
                   onDeleteTask={this.deleteTask}
                   onEditTask={this.editTask}
+                  onCompleteTask={this.completeTask}
                 ></Task>
               );
             })}

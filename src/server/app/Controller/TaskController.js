@@ -90,6 +90,26 @@ exports.update = async (req, res) => {
   }
 };
 
+exports.complete = async (req, res) => {
+  try {
+    await db.Task.update(
+      {
+        status: 1,
+      },
+      {
+        where: { id: req.params.task },
+      }
+    );
+
+    return res.status(200).json({
+      message: "Task marked as completed",
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send(error.message);
+  }
+};
+
 exports.destroy = async (req, res) => {
   try {
     await db.Task.update(
