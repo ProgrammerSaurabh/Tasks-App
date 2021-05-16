@@ -68,6 +68,12 @@ exports.store = async (req, res) => {
           order: [["id", "ASC"]],
         });
 
+        // db.User.findAll({ order: Sequelize.literal("rand()"), limit: 1 }).then(
+        //   (user) => {
+        //     console.log(user);
+        //   }
+        // );
+
         if (user) {
           await db.Task.update(
             {
