@@ -18,8 +18,6 @@ exports.index = async (req, res) => {
       },
     };
 
-    console.log(schedule.scheduledJobs);
-
     const tasks = await db.Task.findAll(filters);
 
     tasks.map((task) => {
@@ -60,7 +58,6 @@ exports.store = async (req, res) => {
 
     schedule.scheduleJob("task-" + task.id, dueDate, async () => {
       if (task.status == 0) {
-        console.log("Updating");
         const user = await db.User.findOne({
           where: {
             id: {
@@ -161,7 +158,7 @@ exports.destroy = async (req, res) => {
     });
 
     if (task) {
-      schedule.cancelJob("task-" + task.id);
+      schedule.cancelJob("task-" + req.params.task);
 
       return res.status(200).json({
         message: "Task deleted successfully",
