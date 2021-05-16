@@ -145,10 +145,11 @@ class Dashboard extends Component {
     }
   };
 
-  editTask = (title, description, id) => {
+  editTask = (title, description, due_date, id) => {
     this.setState({
       title: title,
       description: description,
+      due_date: due_date,
       edit: true,
       task: id,
     });
@@ -187,6 +188,7 @@ class Dashboard extends Component {
           tasks: tasks_,
           title: "",
           description: "",
+          due_date: new Date(),
           loader: false,
           task: null,
           edit: false,

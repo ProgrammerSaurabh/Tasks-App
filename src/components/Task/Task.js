@@ -23,6 +23,7 @@ function Task(props) {
             props.onEditTask(
               props.task.title,
               props.task.description,
+              props.task.due_date,
               props.task.id
             );
           }}

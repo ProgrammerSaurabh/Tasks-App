@@ -18,12 +18,7 @@ const sequelize = new Sequelize(
     dialectOptions: {
       useUTC: false,
       dateStrings: true,
-      typeCast: function (field, next) {
-        if (field.type === "DATETIME") {
-          return field.string();
-        }
-        return next();
-      },
+      typeCast: true,
     },
     timezone: "+05:30",
   }
