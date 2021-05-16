@@ -7,7 +7,14 @@ const Op = Sequelize.Op;
 exports.index = async (req, res) => {
   try {
     let filters = {
-      attributes: ["id", "title", "description", "status", "due_date"],
+      attributes: [
+        "id",
+        "title",
+        "description",
+        "status",
+        "due_date",
+        "updatedAt",
+      ],
       order: [
         ["status", "ASC"],
         ["createdAt", "DESC"],
@@ -62,22 +69,16 @@ exports.store = async (req, res) => {
           where: {
             id: {
               [Op.ne]: req.user.id,
-              [Op.gt]: req.user.id,
             },
           },
-          order: [["id", "ASC"]],
+          order: Sequelize.literal("rand()"),
         });
-
-        // db.User.findAll({ order: Sequelize.literal("rand()"), limit: 1 }).then(
-        //   (user) => {
-        //     console.log(user);
-        //   }
-        // );
 
         if (user) {
           await db.Task.update(
             {
               userId: user.id,
+              updatedAt: new Date(),
             },
             {
               where: { id: task.id },
@@ -111,6 +112,7 @@ exports.update = async (req, res) => {
       {
         title: req.body.title.trim(),
         description: req.body.description.trim() || null,
+        updatedAt: new Date(),
       },
       {
         where: { id: req.params.task },
@@ -131,6 +133,7 @@ exports.complete = async (req, res) => {
     await db.Task.update(
       {
         status: 1,
+        updatedAt: new Date(),
       },
       {
         where: { id: req.params.task },
@@ -153,6 +156,7 @@ exports.destroy = async (req, res) => {
     await db.Task.update(
       {
         status: -1,
+        updatedAt: new Date(),
       },
       {
         where: { id: req.params.task },

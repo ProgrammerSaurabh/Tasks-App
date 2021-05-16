@@ -13,7 +13,7 @@ function Task(props) {
     <div className="task">
       <div className="task-detail">
         <h4>{props.task.title}</h4>
-        <p className={props.task.status === 1 ? "d-none" : "task-user"}>
+        <p className="task-user">
           <small className="text-muted">Assigned to:</small>
           &nbsp;{props.task.user.name}
         </p>
@@ -22,6 +22,13 @@ function Task(props) {
           &nbsp;
           <small>
             {moment(props.task.due_date).format("DD/MM/YYYY hh:mm A")}
+          </small>
+        </p>
+        <p className={props.task.status === 1 ? "task-user" : "d-none"}>
+          <small className="text-muted">Completed on:</small>
+          &nbsp;
+          <small>
+            {moment(props.task.updatedAt).format("DD/MM/YYYY hh:mm A")}
           </small>
         </p>
       </div>

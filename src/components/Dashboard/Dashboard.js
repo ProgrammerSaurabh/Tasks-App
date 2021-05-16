@@ -178,6 +178,7 @@ class Dashboard extends Component {
         let tasks_ = this.state["tasks"].map((task) => {
           if (task.id === id) {
             task.status = 1;
+            task.updatedAt = new Date();
           }
           return task;
         });
@@ -253,7 +254,7 @@ class Dashboard extends Component {
       <div className="dashboard-container">
         <Helmet>
           <title>
-            {"Dashboard (" + this.state["tasks"].length + ") - Task App"}
+            {"Tasks (" + this.state["tasks"].length + ") - Task App"}
           </title>
         </Helmet>
         <div className="jumbotron pt-4">
@@ -335,6 +336,9 @@ class Dashboard extends Component {
                     onChange={this.dueDateChange}
                     value={this.state["due_date"]}
                     disabled={this.state["edit"]}
+                    disableCalendar={this.state["edit"]}
+                    disableClock={this.state["edit"]}
+                    minDate={new Date()}
                   />
                 </div>
                 <small
