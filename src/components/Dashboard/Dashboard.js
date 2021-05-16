@@ -117,6 +117,12 @@ class Dashboard extends Component {
         due_date: new Date(),
         loader: false,
       });
+
+      toast("Task created successfully", {
+        type: "success",
+        delay: "2000",
+        position: "top-center",
+      });
     } catch (error) {
       if (error.response && error.response.data) {
         this.setState({

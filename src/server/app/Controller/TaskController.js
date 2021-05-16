@@ -1,6 +1,8 @@
 const moment = require("moment");
 const db = require("../../db");
-// const schedule = require("node-schedule");
+const schedule = require("node-schedule");
+const Sequelize = require("sequelize");
+const Op = Sequelize.Op;
 
 exports.index = async (req, res) => {
   try {
@@ -15,6 +17,9 @@ exports.index = async (req, res) => {
         attributes: ["id", "name"],
       },
     };
+
+    console.log(schedule.scheduledJobs);
+
     const tasks = await db.Task.findAll(filters);
 
     tasks.map((task) => {
@@ -53,7 +58,32 @@ exports.store = async (req, res) => {
       userId: req.user.id,
     });
 
-    // schedule.scheduleJob("task-" + task.id,dueDate,() => {if( dueDate){}});
+    schedule.scheduleJob("task-" + task.id, dueDate, async () => {
+      if (task.status == 0) {
+        console.log("Updating");
+        const user = await db.User.findOne({
+          where: {
+            id: {
+              [Op.ne]: req.user.id,
+              [Op.gt]: req.user.id,
+            },
+          },
+          order: [["id", "ASC"]],
+        });
+
+        if (user) {
+          await db.Task.update(
+            {
+              userId: user.id,
+            },
+            {
+              where: { id: task.id },
+            }
+          );
+        }
+        schedule.cancelJob("task-" + task.id);
+      }
+    });
 
     return res.status(201).json({
       task,
@@ -104,6 +134,8 @@ exports.complete = async (req, res) => {
       }
     );
 
+    schedule.cancelJob("task-" + req.params.task);
+
     return res.status(200).json({
       message: "Task marked as completed",
     });
@@ -129,6 +161,8 @@ exports.destroy = async (req, res) => {
     });
 
     if (task) {
+      schedule.cancelJob("task-" + task.id);
+
       return res.status(200).json({
         message: "Task deleted successfully",
       });
