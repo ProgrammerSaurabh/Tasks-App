@@ -3,6 +3,8 @@ import "../../css/Login.css";
 import RegisterSvg from "../../assets/register.svg";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import axios from "axios";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export default function Register(props) {
   const [error, setError] = useState(null);
@@ -49,7 +51,14 @@ export default function Register(props) {
         confirm_password: confirm_password,
       });
       setLoader(false);
-      props.onRegistered(true);
+      toast("Registered successfully", {
+        type: "success",
+        delay: "2000",
+        position: "top-center",
+      });
+      setTimeout(() => {
+        props.onRegistered(true);
+      }, 1000);
     } catch (error) {
       if (error.response && error.response.data) {
         setError(error.response.data);
@@ -60,6 +69,7 @@ export default function Register(props) {
 
   return (
     <div className="loginContainer">
+      <ToastContainer />
       <div className="loginBox">
         <div className="login-image">
           <img src={RegisterSvg} className="img-fluid" alt="Register" />

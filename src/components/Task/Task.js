@@ -2,18 +2,23 @@ import React from "react";
 import "../../css/Task.css";
 import { FaEdit, FaTrash, FaCheck, FaCheckCircle } from "react-icons/fa";
 import moment from "moment";
+import useToken from "../../helpers/useToken";
 
 function Task(props) {
+  const { getUser } = useToken();
+
+  const user = getUser();
+
   return (
     <div className="task">
       <div className="task-detail">
         <h4>{props.task.title}</h4>
         <p className={props.task.status === 1 ? "d-none" : "task-user"}>
-          <small className="text-muted">Assigned to</small>
+          <small className="text-muted">Assigned to:</small>
           &nbsp;{props.task.user.name}
         </p>
         <p className={props.task.status === 1 ? "d-none" : "task-user"}>
-          <small className="text-muted">Due date</small>
+          <small className="text-muted">Due date:</small>
           &nbsp;
           <small>
             {moment(props.task.due_date).format("DD/MM/YYYY hh:mm A")}
@@ -23,7 +28,7 @@ function Task(props) {
       <div className="task-action">
         <span
           className={
-            props.task.status === 0
+            props.task.status === 0 && props.task.user.id === user.id
               ? "text-primary h5 cursor-pointer pr-2"
               : "d-none"
           }
@@ -40,7 +45,7 @@ function Task(props) {
         </span>
         <span
           className={
-            props.task.status !== 1
+            props.task.status !== 1 && props.task.user.id === user.id
               ? "text-danger h5 cursor-pointer pr-2"
               : "d-none"
           }
@@ -52,7 +57,7 @@ function Task(props) {
         </span>
         <span
           className={
-            props.task.status !== 1
+            props.task.status !== 1 && props.task.user.id === user.id
               ? "text-success h5 cursor-pointer"
               : "d-none"
           }

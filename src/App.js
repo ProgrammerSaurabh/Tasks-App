@@ -6,22 +6,18 @@ import Register from "../src/components/Register/Register";
 import React, { useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import useToken from "./helpers/useToken";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 
 function App() {
-  const { token, saveToken } = useToken();
+  const { token, saveToken, clearData } = useToken();
   const [register, setRegister] = useState(false);
 
-  let toggleRegister = (show = false) => {
-    if (show) {
-      toast("Registered successfully", {
-        type: "success",
-        delay: "2000",
-        position: "top-center",
-      });
-    }
+  let toggleRegister = () => {
     setRegister(!register);
+  };
+
+  let logout = () => {
+    clearData();
+    window.location.reload();
   };
 
   let saveToken_ = (data) => {
@@ -32,15 +28,14 @@ function App() {
     if (register) {
       return (
         <Register
-          onRegistered={toggleRegister}
           onRegisterClick={toggleRegister}
+          onRegistered={toggleRegister}
         />
       );
     }
     return (
       <div>
         <Login onLogin={saveToken_} onRegisterClick={toggleRegister} />
-        <ToastContainer />
       </div>
     );
   }
@@ -50,7 +45,7 @@ function App() {
       <BrowserRouter>
         <Switch>
           <Route path="/">
-            <Dashboard />
+            <Dashboard onLogout={logout} />
           </Route>
         </Switch>
       </BrowserRouter>

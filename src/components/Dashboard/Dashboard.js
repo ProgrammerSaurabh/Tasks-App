@@ -244,8 +244,17 @@ class Dashboard extends Component {
   render() {
     return (
       <div className="dashboard-container">
-        <div className="jumbotron">
+        <div className="jumbotron pt-4">
           <div className="container">
+            <div className="pb-3 d-flex justify-content-end align-items-center">
+              <button
+                type="button"
+                className="btn btn-md login-btn text-white"
+                onClick={this.props.onLogout}
+              >
+                Logout
+              </button>
+            </div>
             <h2>{this.state["edit"] ? "Edit task" : "Add a new task"}</h2>
             <form onSubmit={this.checkStatus}>
               <div className="form-group">

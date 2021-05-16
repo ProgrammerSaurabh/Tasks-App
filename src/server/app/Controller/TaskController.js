@@ -6,7 +6,10 @@ exports.index = async (req, res) => {
   try {
     let filters = {
       attributes: ["id", "title", "description", "status", "due_date"],
-      order: [["status", "ASC"]],
+      order: [
+        ["status", "ASC"],
+        ["createdAt", "DESC"],
+      ],
       include: {
         model: db.User,
         attributes: ["id", "name"],
