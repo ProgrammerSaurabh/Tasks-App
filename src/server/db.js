@@ -1,6 +1,4 @@
 const Sequelize = require("sequelize");
-const Task = require("./app/Models/Task");
-const User = require("./app/Models/User");
 
 require("dotenv").config();
 

@@ -6,6 +6,7 @@ import Register from "../src/components/Register/Register";
 import React, { useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import useToken from "./helpers/useToken";
+import { Helmet } from "react-helmet";
 
 function App() {
   const { token, saveToken, clearData } = useToken();
@@ -27,14 +28,22 @@ function App() {
   if (!token) {
     if (register) {
       return (
-        <Register
-          onRegisterClick={toggleRegister}
-          onRegistered={toggleRegister}
-        />
+        <div>
+          <Helmet>
+            <title>Register - Task App</title>
+          </Helmet>
+          <Register
+            onRegisterClick={toggleRegister}
+            onRegistered={toggleRegister}
+          />
+        </div>
       );
     }
     return (
       <div>
+        <Helmet>
+          <title>Login - Task App</title>
+        </Helmet>
         <Login onLogin={saveToken_} onRegisterClick={toggleRegister} />
       </div>
     );

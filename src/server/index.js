@@ -24,7 +24,7 @@ app.use(corsConfig);
 app.use("/api", require("./routes/api"));
 
 app.use("/", (req, res) => {
-  res.send({ message: "Welcome to todos app" });
+  res.send({ message: "Welcome to tasks app" });
 });
 
 db.sequelize.sync().then(() => {

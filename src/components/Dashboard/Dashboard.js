@@ -10,6 +10,7 @@ import "react-toastify/dist/ReactToastify.css";
 import NoDataSvg from "../../assets/no-task.svg";
 import DateTimePicker from "react-datetime-picker";
 import moment from "moment";
+import { Helmet } from "react-helmet";
 
 class Dashboard extends Component {
   constructor() {
@@ -250,6 +251,11 @@ class Dashboard extends Component {
   render() {
     return (
       <div className="dashboard-container">
+        <Helmet>
+          <title>
+            {"Dashboard (" + this.state["tasks"].length + ") - Task App"}
+          </title>
+        </Helmet>
         <div className="jumbotron pt-4">
           <div className="container">
             <div className="pb-3 d-flex justify-content-end align-items-center">
@@ -276,6 +282,7 @@ class Dashboard extends Component {
                   }
                   placeholder="Enter title"
                   autoFocus
+                  autoComplete="off"
                   value={this.state["title"]}
                   id="title"
                   onChange={this.titleChange}
@@ -298,6 +305,7 @@ class Dashboard extends Component {
                       ? "border-danger form-control"
                       : "form-control"
                   }
+                  autoComplete="off"
                   placeholder="Enter description"
                   value={this.state["description"]}
                   onChange={this.descriptionChange}

@@ -66,7 +66,7 @@ export default function Login(props) {
                 }
                 placeholder="Enter email"
                 autoFocus
-                autoComplete="false"
+                autoComplete="off"
                 value={email}
                 id="email"
                 onChange={emailChange}

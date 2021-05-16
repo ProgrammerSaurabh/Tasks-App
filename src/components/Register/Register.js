@@ -75,7 +75,7 @@ export default function Register(props) {
           <img src={RegisterSvg} className="img-fluid" alt="Register" />
         </div>
         <div className="login-div">
-          <div className="h2 text-center">Register</div>
+          <div className="h2 text-center pt-4 pt-lg-2 pt-xl-2">Register</div>
           <form onSubmit={registerFunction}>
             <div className="form-group">
               <label htmlFor="name">
@@ -89,7 +89,7 @@ export default function Register(props) {
                     : "form-control"
                 }
                 autoFocus
-                autoComplete="false"
+                autoComplete="off"
                 placeholder="Enter name"
                 value={name}
                 id="name"
@@ -116,7 +116,7 @@ export default function Register(props) {
                 }
                 placeholder="Enter email"
                 value={email}
-                autoComplete="false"
+                autoComplete="off"
                 id="email"
                 onChange={emailChange}
               />
@@ -209,7 +209,7 @@ export default function Register(props) {
                 )}
               </button>
             </div>
-            <div className="text-center mt-4">
+            <div className="text-center mt-4 pb-4 pb-lg-2 pb-xl-2">
               <h6 onClick={props.onRegisterClick}>
                 Already have account?&nbsp;
                 <span className="action-text">Login</span>
